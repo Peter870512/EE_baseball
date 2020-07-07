@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import queue
 import csv
-from sklearn.metrics.pairwise import cosine_similarity
 
 def read_clip_rgb(path):
     cap = cv2.VideoCapture(path)
