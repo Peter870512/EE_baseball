@@ -33,6 +33,8 @@ class testDataset(Dataset):
 
 def prediction_of_hit(exit_velo, launch_angle, spray_angle):
     start_time = time.time()
+    train_mean = [88.76291862, 11.53803822, -5.66975084]
+    train_std = [13.87276049, 25.30113639, 27.11713013]
     model_path = 'predictor.pth'
     if torch.cuda.is_available():
         model = Predicter.cuda()
@@ -42,9 +44,9 @@ def prediction_of_hit(exit_velo, launch_angle, spray_angle):
         model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
     data = np.zeros((1,3))
-    data[0, 0] = exit_velo
-    data[0, 1] = launch_angle
-    data[0, 2] = spray_angle
+    data[0, 0] = (exit_velo - train_mean[0]) / train_std[0]
+    data[0, 1] = (launch_angle - train_mean[1]) / train_std[1]
+    data[0, 2] = (spray_angle - train_mean[2]) / train_std[2]
     data = testDataset(data)
     batch_size = 1
     test_loader = DataLoader(data, batch_size=batch_size, shuffle=False)
@@ -71,7 +73,7 @@ def prediction_of_hit(exit_velo, launch_angle, spray_angle):
     elif output == 6:
         predict_result = 'line out'
     end_time = time.time()
-    print(end_time - start_time)  
+    #print(end_time - start_time)  
     print(predict_result)
     return predict_result
 
