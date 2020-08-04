@@ -44,6 +44,7 @@ def prediction_of_hit(exit_velo, launch_angle, spray_angle):
         model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
     data = np.zeros((1,3))
+    exit_velo = exit_velo / 1.6093
     data[0, 0] = (exit_velo - train_mean[0]) / train_std[0]
     data[0, 1] = (launch_angle - train_mean[1]) / train_std[1]
     data[0, 2] = (spray_angle - train_mean[2]) / train_std[2]
